@@ -1,0 +1,4 @@
+# Local build output
+dist/
+**/bin/
+**/obj/
