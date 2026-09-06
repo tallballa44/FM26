@@ -116,7 +116,7 @@ public class MatchStatsExportHandler : IExportHandler
 		_matchContext = ObterContextoDaPartida();
 		ManualLogSource log = Plugin.Log;
 		bool flag = default(bool);
-		BepInExInfoLogInterpolatedStringHandler val2 = new BepInExInfoLogInterpolatedStringHandler(72, 1, ref flag);
+		BepInExInfoLogInterpolatedStringHandler val2 = new BepInExInfoLogInterpolatedStringHandler(72, 1, out flag);
 		if (flag)
 		{
 			((BepInExLogInterpolatedStringHandler)val2).AppendLiteral("[FM26Export.MatchStats] Automatic capture started. Tabs found: ");
@@ -269,7 +269,7 @@ public class MatchStatsExportHandler : IExportHandler
 			_lastTableHash = text9;
 			_accumulatedTabs.Add(scrapedTab);
 			ManualLogSource log = Plugin.Log;
-			BepInExInfoLogInterpolatedStringHandler val5 = new BepInExInfoLogInterpolatedStringHandler(45, 4, ref flag);
+			BepInExInfoLogInterpolatedStringHandler val5 = new BepInExInfoLogInterpolatedStringHandler(45, 4, out flag);
 			if (flag)
 			{
 				((BepInExLogInterpolatedStringHandler)val5).AppendLiteral("[FM26Export.MatchStats] Read ");
@@ -287,7 +287,7 @@ public class MatchStatsExportHandler : IExportHandler
 		else
 		{
 			ManualLogSource log2 = Plugin.Log;
-			BepInExWarningLogInterpolatedStringHandler val6 = new BepInExWarningLogInterpolatedStringHandler(69, 1, ref flag);
+			BepInExWarningLogInterpolatedStringHandler val6 = new BepInExWarningLogInterpolatedStringHandler(69, 1, out flag);
 			if (flag)
 			{
 				((BepInExLogInterpolatedStringHandler)val6).AppendLiteral("[FM26Export.MatchStats] No visible StreamedTable was found on tab ");
@@ -344,7 +344,7 @@ public class MatchStatsExportHandler : IExportHandler
 		{
 			ManualLogSource log = Plugin.Log;
 			bool flag = default(bool);
-			BepInExErrorLogInterpolatedStringHandler val = new BepInExErrorLogInterpolatedStringHandler(30, 1, ref flag);
+			BepInExErrorLogInterpolatedStringHandler val = new BepInExErrorLogInterpolatedStringHandler(30, 1, out flag);
 			if (flag)
 			{
 				((BepInExLogInterpolatedStringHandler)val).AppendLiteral("[FM26Export] safe_click error: ");
@@ -457,7 +457,7 @@ public class MatchStatsExportHandler : IExportHandler
 			stringBuilder.AppendLine("</body></html>");
 			File.WriteAllText(text2, stringBuilder.ToString(), Encoding.UTF8);
 			ManualLogSource log = Plugin.Log;
-			BepInExInfoLogInterpolatedStringHandler val = new BepInExInfoLogInterpolatedStringHandler(76, 2, ref flag2);
+			BepInExInfoLogInterpolatedStringHandler val = new BepInExInfoLogInterpolatedStringHandler(76, 2, out flag2);
 			if (flag2)
 			{
 				((BepInExLogInterpolatedStringHandler)val).AppendLiteral("[FM26Export.MatchStats] Report written: (");
@@ -468,7 +468,7 @@ public class MatchStatsExportHandler : IExportHandler
 			}
 			log.LogInfo(val);
 			ManualLogSource log2 = Plugin.Log;
-			val = new BepInExInfoLogInterpolatedStringHandler(42, 1, ref flag2);
+			val = new BepInExInfoLogInterpolatedStringHandler(42, 1, out flag2);
 			if (flag2)
 			{
 				((BepInExLogInterpolatedStringHandler)val).AppendLiteral("[FM26Export.MatchStats] File saved to: ");
@@ -479,7 +479,7 @@ public class MatchStatsExportHandler : IExportHandler
 		catch (Exception ex)
 		{
 			ManualLogSource log3 = Plugin.Log;
-			BepInExErrorLogInterpolatedStringHandler val2 = new BepInExErrorLogInterpolatedStringHandler(42, 1, ref flag2);
+			BepInExErrorLogInterpolatedStringHandler val2 = new BepInExErrorLogInterpolatedStringHandler(42, 1, out flag2);
 			if (flag2)
 			{
 				((BepInExLogInterpolatedStringHandler)val2).AppendLiteral("[FM26Export.MatchStats] HTML export error: ");
@@ -773,7 +773,7 @@ public class MatchStatsExportHandler : IExportHandler
 				string text8 = string.Join(" ", list).Replace("  ", " ").Trim();
 				ManualLogSource log = Plugin.Log;
 				bool flag = default(bool);
-				BepInExInfoLogInterpolatedStringHandler val5 = new BepInExInfoLogInterpolatedStringHandler(37, 1, ref flag);
+				BepInExInfoLogInterpolatedStringHandler val5 = new BepInExInfoLogInterpolatedStringHandler(37, 1, out flag);
 				if (flag)
 				{
 					((BepInExLogInterpolatedStringHandler)val5).AppendLiteral("[FM26Export] Teams frame raw text: '");
