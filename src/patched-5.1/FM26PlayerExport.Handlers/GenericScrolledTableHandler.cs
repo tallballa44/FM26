@@ -145,7 +145,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 		}
 		ManualLogSource log = Plugin.Log;
 		bool flag = default(bool);
-		BepInExInfoLogInterpolatedStringHandler val5 = new BepInExInfoLogInterpolatedStringHandler(25, 2, ref flag);
+		BepInExInfoLogInterpolatedStringHandler val5 = new BepInExInfoLogInterpolatedStringHandler(25, 2, out flag);
 		if (flag)
 		{
 			((BepInExLogInterpolatedStringHandler)val5).AppendLiteral("[FM26Export] Headers (");
@@ -176,7 +176,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 		}
 		_captureWait = 4;
 		ManualLogSource log2 = Plugin.Log;
-		val5 = new BepInExInfoLogInterpolatedStringHandler(75, 3, ref flag);
+		val5 = new BepInExInfoLogInterpolatedStringHandler(75, 3, out flag);
 		if (flag)
 		{
 			((BepInExLogInterpolatedStringHandler)val5).AppendLiteral("[FM26Export] List capture (");
@@ -262,7 +262,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 				if (_capturedRowCount >= _maxRows)
 				{
 					ManualLogSource log = Plugin.Log;
-					BepInExWarningLogInterpolatedStringHandler val2 = new BepInExWarningLogInterpolatedStringHandler(52, 1, ref flag3);
+					BepInExWarningLogInterpolatedStringHandler val2 = new BepInExWarningLogInterpolatedStringHandler(52, 1, out flag3);
 					if (flag3)
 					{
 						((BepInExLogInterpolatedStringHandler)val2).AppendLiteral("[FM26Export] Configured row limit of ");
@@ -288,7 +288,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 			}
 			bool flag5 = _zeroSteps >= 3;
 			ManualLogSource log2 = Plugin.Log;
-			BepInExInfoLogInterpolatedStringHandler val3 = new BepInExInfoLogInterpolatedStringHandler(58, 7, ref flag3);
+			BepInExInfoLogInterpolatedStringHandler val3 = new BepInExInfoLogInterpolatedStringHandler(58, 7, out flag3);
 			if (flag3)
 			{
 				((BepInExLogInterpolatedStringHandler)val3).AppendLiteral("[FM26Export] Step ");
@@ -316,7 +316,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 				if (_scrollAttempts >= _maxScrollAttempts)
 				{
 					ManualLogSource log3 = Plugin.Log;
-					BepInExWarningLogInterpolatedStringHandler val2 = new BepInExWarningLogInterpolatedStringHandler(58, 1, ref flag3);
+					BepInExWarningLogInterpolatedStringHandler val2 = new BepInExWarningLogInterpolatedStringHandler(58, 1, out flag3);
 					if (flag3)
 					{
 						((BepInExLogInterpolatedStringHandler)val2).AppendLiteral("[FM26Export] Stopped at the scroll safety limit (");
@@ -353,7 +353,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 		catch (Exception ex)
 		{
 			ManualLogSource log4 = Plugin.Log;
-			BepInExErrorLogInterpolatedStringHandler val4 = new BepInExErrorLogInterpolatedStringHandler(31, 1, ref flag3);
+			BepInExErrorLogInterpolatedStringHandler val4 = new BepInExErrorLogInterpolatedStringHandler(31, 1, out flag3);
 			if (flag3)
 			{
 				((BepInExLogInterpolatedStringHandler)val4).AppendLiteral("[FM26Export] CaptureStep error: ");
@@ -384,7 +384,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 			{
 				CloseOutput(deleteFiles: true);
 				ManualLogSource log = Plugin.Log;
-				BepInExWarningLogInterpolatedStringHandler val = new BepInExWarningLogInterpolatedStringHandler(31, 1, ref flag);
+				BepInExWarningLogInterpolatedStringHandler val = new BepInExWarningLogInterpolatedStringHandler(31, 1, out flag);
 				if (flag)
 				{
 					((BepInExLogInterpolatedStringHandler)val).AppendLiteral("[FM26Export] No data captured for ");
@@ -396,7 +396,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 			}
 			CloseOutput(deleteFiles: false);
 			ManualLogSource log2 = Plugin.Log;
-			BepInExInfoLogInterpolatedStringHandler val2 = new BepInExInfoLogInterpolatedStringHandler(28, 1, ref flag);
+			BepInExInfoLogInterpolatedStringHandler val2 = new BepInExInfoLogInterpolatedStringHandler(28, 1, out flag);
 			if (flag)
 			{
 				((BepInExLogInterpolatedStringHandler)val2).AppendLiteral("[FM26Export] Export complete: ");
@@ -405,7 +405,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 			}
 			log2.LogInfo(val2);
 			ManualLogSource log3 = Plugin.Log;
-			val2 = new BepInExInfoLogInterpolatedStringHandler(27, 1, ref flag);
+			val2 = new BepInExInfoLogInterpolatedStringHandler(27, 1, out flag);
 			if (flag)
 			{
 				((BepInExLogInterpolatedStringHandler)val2).AppendLiteral("[FM26Export] CSV saved to: ");
@@ -413,7 +413,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 			}
 			log3.LogInfo(val2);
 			ManualLogSource log4 = Plugin.Log;
-			val2 = new BepInExInfoLogInterpolatedStringHandler(28, 1, ref flag);
+			val2 = new BepInExInfoLogInterpolatedStringHandler(28, 1, out flag);
 			if (flag)
 			{
 				((BepInExLogInterpolatedStringHandler)val2).AppendLiteral("[FM26Export] HTML saved to: ");
@@ -424,7 +424,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 		catch (Exception ex)
 		{
 			ManualLogSource log5 = Plugin.Log;
-			BepInExErrorLogInterpolatedStringHandler val3 = new BepInExErrorLogInterpolatedStringHandler(33, 1, ref flag);
+			BepInExErrorLogInterpolatedStringHandler val3 = new BepInExErrorLogInterpolatedStringHandler(33, 1, out flag);
 			if (flag)
 			{
 				((BepInExLogInterpolatedStringHandler)val3).AppendLiteral("[FM26Export] FinishCapture error: ");
@@ -486,7 +486,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 		{
 			ManualLogSource log = Plugin.Log;
 			bool flag2 = default(bool);
-			BepInExErrorLogInterpolatedStringHandler val = new BepInExErrorLogInterpolatedStringHandler(45, 1, ref flag2);
+			BepInExErrorLogInterpolatedStringHandler val = new BepInExErrorLogInterpolatedStringHandler(45, 1, out flag2);
 			if (flag2)
 			{
 				((BepInExLogInterpolatedStringHandler)val).AppendLiteral("[FM26Export] Error writing exported row: ");
@@ -539,7 +539,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 		_outputStarted = true;
 		ManualLogSource log = Plugin.Log;
 		bool flag = default(bool);
-		BepInExInfoLogInterpolatedStringHandler val = new BepInExInfoLogInterpolatedStringHandler(55, 2, ref flag);
+		BepInExInfoLogInterpolatedStringHandler val = new BepInExInfoLogInterpolatedStringHandler(55, 2, out flag);
 		if (flag)
 		{
 			((BepInExLogInterpolatedStringHandler)val).AppendLiteral("[FM26Export] Incremental output started: CSV=");
@@ -640,7 +640,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 				if (diag)
 				{
 					ManualLogSource log = Plugin.Log;
-					BepInExInfoLogInterpolatedStringHandler val3 = new BepInExInfoLogInterpolatedStringHandler(29, 1, ref flag);
+					BepInExInfoLogInterpolatedStringHandler val3 = new BepInExInfoLogInterpolatedStringHandler(29, 1, out flag);
 					if (flag)
 					{
 						((BepInExLogInterpolatedStringHandler)val3).AppendLiteral("[FM26Export] Cell[1] DIAG: ");
