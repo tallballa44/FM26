@@ -27,7 +27,15 @@ public class StaffExportHandler : GenericScrolledTableHandler
                 return true;
         }
 
-        return HasHeader(headers, "person") && HasHeader(headers, "preferred job");
+        bool hasPerson = HasHeader(headers, "person");
+        bool hasPreferredJob = HasHeader(headers, "preferred job");
+        bool hasJob = HasHeader(headers, "job");
+        bool hasStaffAttribute =
+            HasHeader(headers, "judging staff ability") ||
+            HasHeader(headers, "tactical knowledge") ||
+            HasHeader(headers, "working with youngsters");
+
+        return hasPerson && (hasPreferredJob || (hasJob && hasStaffAttribute));
     }
 
     protected override bool ShouldCaptureRow(VisualElement row)
