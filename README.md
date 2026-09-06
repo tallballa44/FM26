@@ -2,26 +2,48 @@
 
 This repository is the development home for a patched FM26 Player Export build.
 
+## Current stable fork
+
+The validated fork is **FM26 Player Export 5.1.6 (Patch 0.6)**.
+
+Validated behavior includes:
+
+- F8 UI diagnostics.
+- Reliable Staff Search table detection.
+- Selected-only Staff Search exports.
+- Protection against standings tables being claimed by the Player handler.
+- Existing Player Search export behavior preserved.
+- Incremental CSV/HTML output, scrolling, row limits, Calendar export, and Match Stats export retained from the 5.1 baseline.
+- User-facing BepInEx logging translated to English.
+
 ## Branches
 
-- `baseline-5.1` — preserves the exact known-good 5.1 DLL currently used in FM26.
-- `dev/table-routing` — active development branch for diagnostics, table selection, staff export, and English logging.
-- `main` — remains untouched until a patched build is proven stable.
+- `main` — stable validated fork.
+- `baseline-5.1` — preserves the exact original 5.1.0 DLL used as the recovery baseline.
+- `dev/table-routing` — development history for the table-routing and staff-export work.
 
-## Goals
+## Source layout
 
-1. Preserve all working 5.1 behavior.
-2. Restore F8 as a real diagnostic UI rescan.
-3. Enumerate all candidate FM26 tables instead of accepting the first plausible one.
-4. Prefer visible tables with selected rows.
-5. Make Staff Search detection reliable.
-6. Prevent PlayerExportHandler from claiming unrelated tables such as standings.
-7. Translate user-facing BepInEx console output to plain English.
-8. Keep player, calendar, match-stat, CSV, HTML, scrolling, and row-limit behavior unchanged unless a test proves a change is required.
+- `src/decompiled-5.1/` — untouched ILSpy recovery of the original 5.1.0 DLL.
+- `src/patched-5.1/` — maintained patched source.
+- `tools/` — local Windows build scripts.
+- `docs/` — patch notes and test history.
+
+## Build
+
+For the current stable source, run:
+
+`tools\Build-Patch-0.6.cmd`
+
+The DLL is written to:
+
+`dist\patch-0.6\FM26PlayerExport.dll`
+
+The build output is intentionally ignored by Git.
 
 ## Safety rule
 
-Never overwrite the baseline DLL. Experimental builds should use a distinct version string and should be tested against Squad, Player Search, and Staff Search before merging.
+Never overwrite the preserved baseline DLL in the repository. Experimental changes should be tested against Squad, Player Search, and Staff Search before being promoted to `main`.
 
 ## Baseline binary
 
