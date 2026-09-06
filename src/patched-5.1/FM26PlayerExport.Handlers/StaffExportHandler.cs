@@ -8,13 +8,8 @@ public class StaffExportHandler : GenericScrolledTableHandler
 {
     public override bool TryStartCapture(VisualElement root, out string errorMessage)
     {
-        if (base.TryStartCapture(root, out errorMessage))
-        {
-            base.FilePrefix = "staff_export_";
-            return true;
-        }
-
-        return false;
+        base.FilePrefix = "staff_export_";
+        return base.TryStartCapture(root, out errorMessage);
     }
 
     protected override bool IsValidScreen(VisualElement root, List<string> headers)
