@@ -48,19 +48,16 @@ internal static class TableDiagnostics
 
             if (classification == "Likely Staff")
             {
-                int logged = 0;
-                for (int rowIndex = 0; rowIndex < view.childCount && logged < 3; rowIndex++)
+                int rowsToLog = Math.Min(view.childCount, 6);
+
+                for (int rowIndex = 0; rowIndex < rowsToLog; rowIndex++)
                 {
                     var row = view.ElementAt(rowIndex);
-                    if (!StaffSelectionDetector.IsSelected(row))
-                        continue;
-
-                    log.LogInfo($"[FM26Export.Scan]   Selected row marker {rowIndex}: {StaffSelectionDetector.DescribeSelectionMarkers(row)}");
-                    logged++;
+                    log.LogInfo($"[FM26Export.Scan]   Staff row {rowIndex}: {StaffSelectionDetector.DescribeRowState(row)}");
                 }
 
                 if (selectedRows == 0)
-                    log.LogInfo("[FM26Export.Scan]   No staff selection marker detected in the currently rendered rows.");
+                    log.LogInfo("[FM26Export.Scan]   Strict detector found no selected staff rows in the currently rendered rows.");
             }
         }
 
