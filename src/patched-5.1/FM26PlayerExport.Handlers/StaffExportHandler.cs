@@ -32,10 +32,7 @@ public class StaffExportHandler : GenericScrolledTableHandler
 
     protected override bool ShouldCaptureRow(VisualElement row)
     {
-        // Staff Search does not expose the same selected-row class used by player lists.
-        // Export the rows rendered by the staff search table and let scrolling/deduplication
-        // collect the full filtered result set.
-        return row != null && row.childCount > 0;
+        return StaffSelectionDetector.IsSelected(row);
     }
 
     private static bool HasHeader(List<string> headers, string expected)
