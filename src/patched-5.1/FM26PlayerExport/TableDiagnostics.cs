@@ -201,6 +201,11 @@ internal static class TableDiagnostics
     {
         bool hasPerson = ContainsHeader(headers, "person");
         bool hasPreferredJob = ContainsHeader(headers, "preferred job");
+        bool hasJob = ContainsHeader(headers, "job");
+        bool hasStaffAttribute =
+            ContainsHeader(headers, "judging staff ability") ||
+            ContainsHeader(headers, "tactical knowledge") ||
+            ContainsHeader(headers, "working with youngsters");
         bool hasTeam = ContainsHeader(headers, "team");
         bool hasPld = ContainsHeader(headers, "pld");
         bool hasW = ContainsHeader(headers, "w");
@@ -208,7 +213,7 @@ internal static class TableDiagnostics
         bool hasL = ContainsHeader(headers, "l");
         bool hasPts = ContainsHeader(headers, "pts");
 
-        if (hasPerson && hasPreferredJob)
+        if (hasPerson && (hasPreferredJob || (hasJob && hasStaffAttribute)))
             return "Likely Staff";
 
         if (hasTeam && hasPld && hasW && hasD && hasL && hasPts)
