@@ -53,107 +53,56 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 
 	protected string FilePrefix { get; set; } = "export_";
 
+	private sealed class TableCandidate
+	{
+		public VisualElement Headers;
+		public VisualElement View;
+		public bool Visible;
+	}
+
 	public virtual bool TryStartCapture(VisualElement root, out string errorMessage)
 	{
-		//IL_02c1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02c8: Expected O, but got Unknown
-		//IL_03be: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03c5: Expected O, but got Unknown
-		//IL_03a3: Unknown result type (might be due to invalid IL or missing references)
 		errorMessage = string.Empty;
-		VisualElement val = null;
-		VisualElement val2 = null;
-		VisualElement val3 = UIUtils.FindByName(root, "playertable") ?? UIUtils.FindByName(root, "client-object-viewer-table");
-		if (val3 != null)
+		List<TableCandidate> candidates = FindTableCandidates(root);
+
+		if (candidates.Count == 0)
 		{
-			val = UIUtils.FindByName(val3, "column-headers");
-			val2 = UIUtils.FindByName(val3, "View");
-		}
-		if (val == null || val2 == null)
-		{
-			List<VisualElement> list = new List<VisualElement>();
-			FindAllByName(root, "column-headers", list);
-			foreach (VisualElement item in list)
-			{
-				object obj = UIUtils.FindByName(item.parent, "View");
-				if (obj == null)
-				{
-					VisualElement parent = item.parent;
-					obj = ((((parent != null) ? parent.parent : null) != null) ? UIUtils.FindByName(item.parent.parent, "View") : null);
-					if (obj == null)
-					{
-						VisualElement parent2 = item.parent;
-						object obj2;
-						if (parent2 == null)
-						{
-							obj2 = null;
-						}
-						else
-						{
-							VisualElement parent3 = parent2.parent;
-							obj2 = ((parent3 != null) ? parent3.parent : null);
-						}
-						obj = ((obj2 != null) ? UIUtils.FindByName(item.parent.parent.parent, "View") : null);
-					}
-				}
-				VisualElement val4 = (VisualElement)obj;
-				if (val4 != null && val4.childCount > 0)
-				{
-					val = item;
-					val2 = val4;
-					break;
-				}
-			}
-		}
-		if (val == null || val2 == null)
-		{
-			errorMessage = "[FM26Export.GenericTable] No list table ('playertable' or generic) was found in the UI.";
+			errorMessage = "[FM26Export.GenericTable] No list table candidates were found in the UI.";
 			return false;
 		}
-		_captureView = val2;
-		_captureHeaders = new List<string>();
-		for (int i = 1; i < val.childCount; i++)
+
+		// Prefer visible candidates, but keep hidden candidates as a fallback for compatibility.
+		candidates.Sort((a, b) => b.Visible.CompareTo(a.Visible));
+
+		List<string> rejected = new List<string>();
+
+		foreach (TableCandidate candidate in candidates)
 		{
-			VisualElement el = val.ElementAt(i);
-			List<string> list2 = new List<string>();
-			UIUtils.CollectAllTexts(el, list2);
-			string text = string.Empty;
-			foreach (string item2 in list2)
+			_captureView = candidate.View;
+			_captureHeaders = ReadHeaders(candidate.Headers);
+
+			if (!IsValidScreen(root, _captureHeaders))
 			{
-				string text2 = item2.ToLowerInvariant();
-				if (!text2.Contains("sort") && !text2.Contains("orden") && !text2.Contains("order") && item2.Length > text.Length)
-				{
-					text = item2;
-				}
+				rejected.Add(string.Join(", ", _captureHeaders));
+				continue;
 			}
-			if (string.IsNullOrWhiteSpace(text))
-			{
-				string text3 = UIUtils.CollectFirstTooltip(el);
-				string text4 = UIUtils.CollectFirstText(el);
-				text = ((!string.IsNullOrWhiteSpace(text3)) ? text3 : text4);
-			}
-			_captureHeaders.Add((text != null) ? UIUtils.Esc(text) : $"Col{i}");
+
+			Plugin.Log.LogInfo($"[FM26Export] Accepted table candidate. visible={candidate.Visible} | Headers ({_captureHeaders.Count}): {string.Join(" | ", _captureHeaders)}");
+			InitializeCaptureState();
+			return true;
 		}
-		if (_captureHeaders.Count == 0)
-		{
-			_captureHeaders.Add("Data");
-		}
-		if (!IsValidScreen(root, _captureHeaders))
-		{
-			errorMessage = "[FM26Export] Table found, but rejected by the generic/child handler. Headers: " + string.Join(", ", _captureHeaders);
-			return false;
-		}
-		ManualLogSource log = Plugin.Log;
-		bool flag = default(bool);
-		BepInExInfoLogInterpolatedStringHandler val5 = new BepInExInfoLogInterpolatedStringHandler(25, 2, out flag);
-		if (flag)
-		{
-			((BepInExLogInterpolatedStringHandler)val5).AppendLiteral("[FM26Export] Headers (");
-			((BepInExLogInterpolatedStringHandler)val5).AppendFormatted<int>(_captureHeaders.Count);
-			((BepInExLogInterpolatedStringHandler)val5).AppendLiteral("): ");
-			((BepInExLogInterpolatedStringHandler)val5).AppendFormatted<string>(string.Join(" | ", _captureHeaders));
-		}
-		log.LogInfo(val5);
+
+		_captureView = null;
+		_captureHeaders = null;
+		errorMessage = "[FM26Export] Candidate tables were found, but none matched this handler.";
+		if (rejected.Count > 0)
+			errorMessage += " Rejected headers: " + string.Join(" || ", rejected);
+
+		return false;
+	}
+
+	private void InitializeCaptureState()
+	{
 		_seenKeys = new HashSet<string>();
 		_scrollAttempts = 0;
 		_maxRows = PluginConfig.EffectiveMaxRowsToExport;
@@ -169,26 +118,141 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 		_htmlWriter = null;
 		_csvFile = null;
 		_htmlFile = null;
+
 		ScrollView firstAncestorOfType = _captureView.GetFirstAncestorOfType<ScrollView>();
 		if (firstAncestorOfType != null)
-		{
 			firstAncestorOfType.scrollOffset = Vector2.zero;
-		}
-		_captureWait = 4;
-		ManualLogSource log2 = Plugin.Log;
-		val5 = new BepInExInfoLogInterpolatedStringHandler(75, 3, out flag);
-		if (flag)
+
+		_captureWait = WAIT_FRAMES;
+		Plugin.Log.LogInfo($"[FM26Export] List capture ({FilePrefix}) started. Row limit={_maxRows} rows | scroll safety={_maxScrollAttempts}.");
+	}
+
+	private List<TableCandidate> FindTableCandidates(VisualElement root)
+	{
+		List<TableCandidate> results = new List<TableCandidate>();
+		HashSet<VisualElement> seenViews = new HashSet<VisualElement>();
+
+		AddNamedContainerCandidate(root, "playertable", results, seenViews);
+		AddNamedContainerCandidate(root, "client-object-viewer-table", results, seenViews);
+		AddNamedContainerCandidate(root, "nonplayertable", results, seenViews);
+
+		List<VisualElement> headers = new List<VisualElement>();
+		FindAllByName(root, "column-headers", headers);
+
+		foreach (VisualElement header in headers)
 		{
-			((BepInExLogInterpolatedStringHandler)val5).AppendLiteral("[FM26Export] List capture (");
-			((BepInExLogInterpolatedStringHandler)val5).AppendFormatted<string>(FilePrefix);
-			((BepInExLogInterpolatedStringHandler)val5).AppendLiteral(") started. Row limit=");
-			((BepInExLogInterpolatedStringHandler)val5).AppendFormatted<int>(_maxRows);
-			((BepInExLogInterpolatedStringHandler)val5).AppendLiteral(" rows | scroll safety=");
-			((BepInExLogInterpolatedStringHandler)val5).AppendFormatted<int>(_maxScrollAttempts);
-			((BepInExLogInterpolatedStringHandler)val5).AppendLiteral(".");
+			VisualElement view = FindNearbyView(header);
+			AddCandidate(header, view, results, seenViews);
 		}
-		log2.LogInfo(val5);
-		return true;
+
+		return results;
+	}
+
+	private void AddNamedContainerCandidate(VisualElement root, string name, List<TableCandidate> results, HashSet<VisualElement> seenViews)
+	{
+		VisualElement container = UIUtils.FindByName(root, name);
+		if (container == null)
+			return;
+
+		VisualElement headers = UIUtils.FindByName(container, "column-headers");
+		VisualElement view = UIUtils.FindByName(container, "View");
+		AddCandidate(headers, view, results, seenViews);
+	}
+
+	private void AddCandidate(VisualElement headers, VisualElement view, List<TableCandidate> results, HashSet<VisualElement> seenViews)
+	{
+		if (headers == null || view == null || view.childCount == 0 || seenViews.Contains(view))
+			return;
+
+		seenViews.Add(view);
+		results.Add(new TableCandidate
+		{
+			Headers = headers,
+			View = view,
+			Visible = IsVisibleForCapture(view)
+		});
+	}
+
+	private VisualElement FindNearbyView(VisualElement headers)
+	{
+		VisualElement scope = headers?.parent;
+
+		for (int depth = 0; scope != null && depth < 4; depth++, scope = scope.parent)
+		{
+			VisualElement view = UIUtils.FindByName(scope, "View");
+			if (view != null)
+				return view;
+		}
+
+		return null;
+	}
+
+	private List<string> ReadHeaders(VisualElement headersElement)
+	{
+		List<string> headers = new List<string>();
+
+		for (int i = 1; i < headersElement.childCount; i++)
+		{
+			VisualElement el = headersElement.ElementAt(i);
+			List<string> texts = new List<string>();
+			UIUtils.CollectAllTexts(el, texts);
+
+			string text = string.Empty;
+			foreach (string item in texts)
+			{
+				string lower = item.ToLowerInvariant();
+				if (!lower.Contains("sort") && !lower.Contains("orden") && !lower.Contains("order") && item.Length > text.Length)
+					text = item;
+			}
+
+			if (string.IsNullOrWhiteSpace(text))
+			{
+				string tooltip = UIUtils.CollectFirstTooltip(el);
+				string firstText = UIUtils.CollectFirstText(el);
+				text = !string.IsNullOrWhiteSpace(tooltip) ? tooltip : firstText;
+			}
+
+			headers.Add(text != null ? UIUtils.Esc(text) : $"Col{i}");
+		}
+
+		if (headers.Count == 0)
+			headers.Add("Data");
+
+		return headers;
+	}
+
+	private bool IsVisibleForCapture(VisualElement element)
+	{
+		if (element == null)
+			return false;
+
+		try
+		{
+			for (VisualElement current = element; current != null; current = current.parent)
+			{
+				if (!current.visible || current.resolvedStyle.display == DisplayStyle.None)
+					return false;
+			}
+
+			Rect bounds = element.worldBound;
+			return bounds.width > 0f && bounds.height > 0f;
+		}
+		catch
+		{
+			return true;
+		}
+	}
+
+	protected virtual bool ShouldCaptureRow(VisualElement row)
+	{
+		try
+		{
+			return row != null && row.ClassListContains("virtualised-list__item--selected");
+		}
+		catch
+		{
+			return false;
+		}
 	}
 
 	protected abstract bool IsValidScreen(VisualElement root, List<string> headers);
@@ -225,15 +289,7 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 			for (int i = 0; i < _captureView.childCount; i++)
 			{
 				VisualElement val = _captureView.ElementAt(i);
-				bool flag = false;
-				try
-				{
-					flag = val.ClassListContains("virtualised-list__item--selected");
-				}
-				catch
-				{
-				}
-				if (!flag)
+				if (!ShouldCaptureRow(val))
 				{
 					continue;
 				}
