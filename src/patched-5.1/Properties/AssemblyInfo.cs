@@ -2,8 +2,8 @@ using System.Reflection;
 
 [assembly: AssemblyCompany("FM26PlayerExport")]
 [assembly: AssemblyConfiguration("Release")]
-[assembly: AssemblyFileVersion("5.1.2.0")]
-[assembly: AssemblyInformationalVersion("5.1.2-patch0.2")]
+[assembly: AssemblyFileVersion("5.1.3.0")]
+[assembly: AssemblyInformationalVersion("5.1.3-patch0.3")]
 [assembly: AssemblyProduct("FM26PlayerExport")]
 [assembly: AssemblyTitle("FM26PlayerExport")]
-[assembly: AssemblyVersion("5.1.2.0")]
+[assembly: AssemblyVersion("5.1.3.0")]
