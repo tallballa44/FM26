@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FM26PlayerExport;
 
-[BepInPlugin("com.koda.fm26.playerexport", "FM26 Player Export", "5.1.5")]
+[BepInPlugin("com.koda.fm26.playerexport", "FM26 Player Export", "5.1.6")]
 public class Plugin : BasePlugin
 {
     internal static new ManualLogSource Log;
@@ -14,14 +14,14 @@ public class Plugin : BasePlugin
     public override void Load()
     {
         Log = base.Log;
-        Log.LogInfo("[FM26Export Patch 0.5] Loaded. Hotkeys: F9 or Ctrl+P = export | F8 = UI diagnostics");
+        Log.LogInfo("[FM26Export Patch 0.6] Loaded. Hotkeys: F9 or Ctrl+P = export | F8 = UI diagnostics");
         PluginConfig.Init(base.Config, Log);
         _behaviour = AddComponent<ExportBehaviour>();
     }
 
     public override bool Unload()
     {
-        Log.LogInfo("[FM26Export Patch 0.5] Unloading plugin...");
+        Log.LogInfo("[FM26Export Patch 0.6] Unloading plugin...");
         if (_behaviour != null)
             Object.Destroy(_behaviour);
 
