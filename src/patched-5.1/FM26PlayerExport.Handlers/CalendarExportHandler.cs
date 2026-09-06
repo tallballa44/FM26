@@ -177,7 +177,7 @@ public class CalendarExportHandler : IExportHandler
 		File.WriteAllText(text3, stringBuilder.ToString(), Encoding.UTF8);
 		ManualLogSource log = Plugin.Log;
 		bool flag = default(bool);
-		BepInExInfoLogInterpolatedStringHandler val = new BepInExInfoLogInterpolatedStringHandler(58, 2, ref flag);
+		BepInExInfoLogInterpolatedStringHandler val = new BepInExInfoLogInterpolatedStringHandler(58, 2, out flag);
 		if (flag)
 		{
 			((BepInExLogInterpolatedStringHandler)val).AppendLiteral("[FM26Export.Calendar] Exported ");
