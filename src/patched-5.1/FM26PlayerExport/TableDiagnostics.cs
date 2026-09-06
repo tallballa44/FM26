@@ -45,6 +45,23 @@ internal static class TableDiagnostics
             log.LogInfo($"[FM26Export.Scan]   View: {SafeName(view)} | visible={visible} | renderedRows={renderedRows} | selectedRows={selectedRows}");
             log.LogInfo($"[FM26Export.Scan]   Headers ({headers.Count}): {string.Join(" | ", headers)}");
             log.LogInfo($"[FM26Export.Scan]   Classification: {classification}");
+
+            if (classification == "Likely Staff")
+            {
+                int logged = 0;
+                for (int rowIndex = 0; rowIndex < view.childCount && logged < 3; rowIndex++)
+                {
+                    var row = view.ElementAt(rowIndex);
+                    if (!StaffSelectionDetector.IsSelected(row))
+                        continue;
+
+                    log.LogInfo($"[FM26Export.Scan]   Selected row marker {rowIndex}: {StaffSelectionDetector.DescribeSelectionMarkers(row)}");
+                    logged++;
+                }
+
+                if (selectedRows == 0)
+                    log.LogInfo("[FM26Export.Scan]   No staff selection marker detected in the currently rendered rows.");
+            }
         }
 
         if (candidateNumber == 0)
@@ -123,7 +140,7 @@ internal static class TableDiagnostics
         {
             try
             {
-                if (view.ElementAt(i).ClassListContains("virtualised-list__item--selected"))
+                if (StaffSelectionDetector.IsSelected(view.ElementAt(i)))
                     selected++;
             }
             catch { }
