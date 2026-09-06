@@ -333,10 +333,9 @@ public abstract class GenericScrolledTableHandler : IExportHandler
 			if (firstAncestorOfType != null)
 			{
 				Rect layout = ((VisualElement)firstAncestorOfType).layout;
-				if (((Rect)(ref layout)).height > 0f)
+				if (layout.height > 0f)
 				{
-					layout = ((VisualElement)firstAncestorOfType).layout;
-					num3 = ((Rect)(ref layout)).height;
+					num3 = layout.height;
 					goto IL_0369;
 				}
 			}
