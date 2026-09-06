@@ -54,7 +54,7 @@ internal static class TableDiagnostics
         else
         {
             log.LogInfo($"[FM26Export.Scan] Scan complete. Candidates found: {candidateNumber}.");
-            log.LogInfo("[FM26Export.Scan] Diagnostic scan does not change export routing in Patch 0.1.");
+            log.LogInfo("[FM26Export.Scan] F8 scan is diagnostic only; it does not start an export.");
         }
     }
 
